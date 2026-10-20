@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 import api from '@/lib/axios';
+import { cerrarSesion, iniciarSesion, inicioSegunRol, mensajeError } from '@/lib/sesion';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,10 +19,11 @@ export default function LoginPage() {
 
     try {
       const { data } = await api.post('/auth/admin/login', { email, password });
-      Cookies.set('token', data.token, { expires: 7 });
-      router.push('/dashboard');
-    } catch {
-      setError('Email o contraseña incorrectos');
+      cerrarSesion();
+      iniciarSesion(data);
+      router.push(inicioSegunRol(data.rol));
+    } catch (err) {
+      setError(mensajeError(err, 'Email o contraseña incorrectos'));
     } finally {
       setLoading(false);
     }

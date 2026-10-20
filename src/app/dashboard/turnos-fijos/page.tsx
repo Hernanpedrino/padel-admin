@@ -72,7 +72,7 @@ export default function TurnosFijosPage() {
 
   const buscarUsuario = async () => {
     try {
-      const { data } = await api.get(`/usuarios/buscar?email=${form.usuarioEmail}`);
+      const { data } = await api.get('/auth/usuario/buscar', { params: { email: form.usuarioEmail } });
       setUsuarios([data]);
     } catch {
       setUsuarios([]);

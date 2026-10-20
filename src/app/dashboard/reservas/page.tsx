@@ -10,7 +10,7 @@ interface Reserva {
   turno: {
     fechaHoraInicio: string;
     fechaHoraFin: string;
-    precio: number;
+    precio: string; // Decimal de Prisma, llega serializado como string
     cancha: {
       nombre: string;
       tipo: string;

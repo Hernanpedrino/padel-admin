@@ -13,7 +13,7 @@ interface Turno {
     id: string;
     fechaHoraInicio: string;
     fechaHoraFin: string;
-    precio: number;
+    precio: string; // Decimal de Prisma, llega serializado como string
     estado: string;
     cancha: Cancha;
 }

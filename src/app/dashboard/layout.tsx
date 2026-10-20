@@ -16,6 +16,9 @@ const MENU_OPERACION: ItemMenu[] = [
   { href: '/dashboard/turnos', label: '📅 Turnos' },
   { href: '/dashboard/reservas', label: '📋 Reservas' },
   { href: '/dashboard/turnos-fijos', label: '📌 Turnos fijos' },
+  { href: '/dashboard/torneos', label: '🏆 Torneos' },
+  { href: '/dashboard/clases', label: '🎓 Clases' },
+  { href: '/dashboard/pagos', label: '💵 Cobros' },
 ];
 
 const MENU_MANAGER: ItemMenu[] = [
@@ -66,9 +69,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     window.location.href = elegido ? '/dashboard/canchas' : '/dashboard/organizacion';
   };
 
+  // Se marca el ítem más específico que contiene la ruta actual (ej. /dashboard/torneos/123 → Torneos)
+  const hrefActivo = [...MENU_OPERACION, ...MENU_MANAGER, ...MENU_SUPERADMIN, { href: '/dashboard', label: '' }]
+    .map((m) => m.href)
+    .filter((h) => pathname === h || pathname.startsWith(h + '/'))
+    .sort((a, b) => b.length - a.length)[0];
+  const activo = (href: string) => href === hrefActivo;
+
   const linkClase = (href: string) =>
     `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-      pathname === href ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+      activo(href) ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
     }`;
 
   const renderMenu = (items: ItemMenu[]) =>

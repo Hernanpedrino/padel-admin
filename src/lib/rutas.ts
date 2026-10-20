@@ -7,6 +7,9 @@ export const RUTAS_OPERACION = [
   '/dashboard/turnos',
   '/dashboard/reservas',
   '/dashboard/turnos-fijos',
+  '/dashboard/torneos',
+  '/dashboard/clases',
+  '/dashboard/pagos',
 ];
 
 export function inicioSegunRol(rol: string | undefined) {

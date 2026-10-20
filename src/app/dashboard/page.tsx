@@ -9,6 +9,8 @@ const ACCESOS = [
   { href: '/dashboard/turnos', titulo: '📅 Turnos', texto: 'Publicá turnos libres para que se reserven desde la app' },
   { href: '/dashboard/reservas', titulo: '📋 Reservas', texto: 'Reservas confirmadas por los jugadores' },
   { href: '/dashboard/turnos-fijos', titulo: '📌 Turnos fijos', texto: 'Jugadores con horario semanal reservado' },
+  { href: '/dashboard/torneos', titulo: '🏆 Torneos', texto: 'Publicá torneos y confirmá las parejas inscriptas' },
+  { href: '/dashboard/clases', titulo: '🎓 Clases', texto: 'Publicá clases y gestioná los inscriptos' },
 ];
 
 export default function DashboardPage() {

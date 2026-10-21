@@ -5,10 +5,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import { Rol, cerrarSesion, elegirComplejo, getComplejo, getNombre, getRol } from '@/lib/sesion';
+import { Pendientes, escucharCambioPendientes, obtenerPendientes } from '@/lib/pendientes';
 
 interface ItemMenu {
   href: string;
   label: string;
+  // Clave del contador de pendientes que se muestra como indicador en el menú
+  pendientes?: keyof Pendientes;
 }
 
 const MENU_OPERACION: ItemMenu[] = [
@@ -16,9 +19,9 @@ const MENU_OPERACION: ItemMenu[] = [
   { href: '/dashboard/turnos', label: '📅 Turnos' },
   { href: '/dashboard/reservas', label: '📋 Reservas' },
   { href: '/dashboard/turnos-fijos', label: '📌 Turnos fijos' },
-  { href: '/dashboard/torneos', label: '🏆 Torneos' },
-  { href: '/dashboard/clases', label: '🎓 Clases' },
-  { href: '/dashboard/pagos', label: '💵 Cobros' },
+  { href: '/dashboard/torneos', label: '🏆 Torneos', pendientes: 'torneos' },
+  { href: '/dashboard/clases', label: '🎓 Clases', pendientes: 'clases' },
+  { href: '/dashboard/pagos', label: '💵 Cobros', pendientes: 'pagos' },
 ];
 
 const MENU_MANAGER: ItemMenu[] = [
@@ -46,6 +49,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [nombre, setNombre] = useState<string>();
   const [complejo, setComplejo] = useState<{ id: string; nombre: string }>();
   const [complejos, setComplejos] = useState<{ id: string; nombre: string }[]>([]);
+  const [pendientes, setPendientes] = useState<Pendientes>();
 
   useEffect(() => {
     const r = getRol();
@@ -56,6 +60,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       api.get('/organizacion').then(({ data }) => setComplejos(data.complejos));
     }
   }, []);
+
+  // Los pendientes se piden al cambiar de página y cuando una página avisa que confirmó algo
+  const operaComplejo = rol === 'admin' || (rol === 'superadmin' && !!complejo);
+  useEffect(() => {
+    if (!operaComplejo) return;
+    const cargar = () => obtenerPendientes().then(setPendientes).catch(() => setPendientes(undefined));
+    cargar();
+    return escucharCambioPendientes(cargar);
+  }, [operaComplejo, pathname]);
 
   const handleLogout = () => {
     cerrarSesion();
@@ -82,11 +95,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }`;
 
   const renderMenu = (items: ItemMenu[]) =>
-    items.map((item) => (
-      <Link key={item.href} href={item.href} className={linkClase(item.href)}>
-        {item.label}
-      </Link>
-    ));
+    items.map((item) => {
+      const cantidad = item.pendientes ? pendientes?.[item.pendientes] ?? 0 : 0;
+      return (
+        <Link key={item.href} href={item.href} className={linkClase(item.href)}>
+          <span className="flex-1">{item.label}</span>
+          {cantidad > 0 && (
+            <span
+              className="min-w-6 h-6 px-2 rounded-full bg-amber-500 text-white text-xs font-semibold flex items-center justify-center"
+              title={`${cantidad} esperando confirmación`}
+            >
+              {cantidad}
+            </span>
+          )}
+        </Link>
+      );
+    });
 
   return (
     <div className="min-h-screen bg-gray-100 flex">

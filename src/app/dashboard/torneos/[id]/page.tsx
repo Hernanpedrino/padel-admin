@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { mensajeError } from '@/lib/sesion';
 import { pagosHabilitados } from '@/lib/complejo';
+import { avisarCambioPendientes } from '@/lib/pendientes';
 import EstadoBadge from '@/components/EstadoBadge';
 import RegistrarPago, { PagoRegistrado } from '@/components/RegistrarPago';
 import {
@@ -65,6 +66,7 @@ export default function TorneoDetallePage() {
   const responder = async (inscripcion: Inscripcion, estado: 'CONFIRMADA' | 'RECHAZADA') => {
     try {
       await api.patch(`/torneos/inscripciones/${inscripcion.id}`, { estado });
+      avisarCambioPendientes();
       fetchData();
     } catch (err) {
       alert(mensajeError(err));

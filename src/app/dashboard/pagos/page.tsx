@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import api from '@/lib/axios';
 import { mensajeError } from '@/lib/sesion';
 import EstadoBadge from '@/components/EstadoBadge';
+import { avisarCambioPendientes } from '@/lib/pendientes';
 import { formatoFechaHora, formatoPrecio, tdClase, thClase } from '@/lib/formato';
 
 interface Persona {
@@ -66,6 +67,7 @@ export default function PagosPage() {
   const cambiarEstado = async (pago: Pago, estado: string) => {
     try {
       await api.patch(`/pagos/${pago.id}`, { estado });
+      avisarCambioPendientes();
       fetchPagos(filtro);
     } catch (err) {
       alert(mensajeError(err));

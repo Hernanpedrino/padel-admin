@@ -10,7 +10,9 @@ export interface Torneo {
   cupoParejas: number;
   precioInscripcion: string;
   estado: string;
+  // _count.inscripciones son las confirmadas; pendientes, las que esperan confirmación
   _count: { inscripciones: number };
+  pendientes: number;
 }
 
 // Transiciones que ofrece el panel; el backend acepta cualquier estado válido

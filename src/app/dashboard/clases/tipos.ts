@@ -9,5 +9,7 @@ export interface Clase {
   precio: string;
   estado: string;
   cancha: { id: string; nombre: string };
+  // _count.inscripciones son las confirmadas; pendientes, las que esperan confirmación
   _count: { inscripciones: number };
+  pendientes: number;
 }

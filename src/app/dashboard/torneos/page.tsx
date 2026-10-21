@@ -5,6 +5,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { mensajeError } from '@/lib/sesion';
 import EstadoBadge from '@/components/EstadoBadge';
+import PendientesBadge from '@/components/PendientesBadge';
 import {
   CATEGORIAS,
   RAMAS,
@@ -177,7 +178,7 @@ export default function TorneosPage() {
               <tr>
                 <th className={thClase}>Torneo</th>
                 <th className={thClase}>Fechas</th>
-                <th className={thClase}>Inscriptos</th>
+                <th className={thClase}>Confirmadas</th>
                 <th className={thClase}>Inscripción</th>
                 <th className={thClase}>Estado</th>
                 <th className={thClase}></th>
@@ -194,7 +195,10 @@ export default function TorneosPage() {
                     {formatoFecha(t.fechaInicio)} – {formatoFecha(t.fechaFin)}
                     <p className="text-gray-500">Cierra {formatoFecha(t.cierreInscripcion)}</p>
                   </td>
-                  <td className={tdClase}>{t._count.inscripciones} / {t.cupoParejas}</td>
+                  <td className={tdClase}>
+                    {t._count.inscripciones} / {t.cupoParejas}
+                    <div><PendientesBadge cantidad={t.pendientes} href={`/dashboard/torneos/${t.id}`} /></div>
+                  </td>
                   <td className={tdClase}>{formatoPrecio(t.precioInscripcion)}</td>
                   <td className={tdClase}><EstadoBadge estado={t.estado} /></td>
                   <td className={`${tdClase} text-right space-x-2 whitespace-nowrap`}>

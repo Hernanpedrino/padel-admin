@@ -5,6 +5,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { mensajeError } from '@/lib/sesion';
 import EstadoBadge from '@/components/EstadoBadge';
+import PendientesBadge from '@/components/PendientesBadge';
 import {
   CATEGORIAS,
   HORARIOS,
@@ -177,7 +178,7 @@ export default function ClasesPage() {
                 <th className={thClase}>Fecha</th>
                 <th className={thClase}>Clase</th>
                 <th className={thClase}>Cancha</th>
-                <th className={thClase}>Inscriptos</th>
+                <th className={thClase}>Confirmados</th>
                 <th className={thClase}>Precio</th>
                 <th className={thClase}>Estado</th>
                 <th className={thClase}></th>
@@ -195,7 +196,10 @@ export default function ClasesPage() {
                     <p className="text-sm text-gray-500">{c.nivel ? etiquetaCategoria(c.nivel) : 'Todos los niveles'}</p>
                   </td>
                   <td className={tdClase}>{c.cancha.nombre}</td>
-                  <td className={tdClase}>{c._count.inscripciones} / {c.cupo}</td>
+                  <td className={tdClase}>
+                    {c._count.inscripciones} / {c.cupo}
+                    <div><PendientesBadge cantidad={c.pendientes} href={`/dashboard/clases/${c.id}`} /></div>
+                  </td>
                   <td className={tdClase}>{formatoPrecio(c.precio)}</td>
                   <td className={tdClase}><EstadoBadge estado={c.estado} /></td>
                   <td className={`${tdClase} text-right`}>

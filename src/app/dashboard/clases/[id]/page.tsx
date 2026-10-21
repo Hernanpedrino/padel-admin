@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import { mensajeError } from '@/lib/sesion';
 import { pagosHabilitados } from '@/lib/complejo';
+import { avisarCambioPendientes } from '@/lib/pendientes';
 import EstadoBadge from '@/components/EstadoBadge';
 import RegistrarPago, { PagoRegistrado } from '@/components/RegistrarPago';
 import { etiquetaCategoria, formatoFecha, formatoHora, formatoPrecio, tdClase, thClase } from '@/lib/formato';
@@ -55,6 +56,7 @@ export default function ClaseDetallePage() {
   const responder = async (inscripcion: Inscripcion, estado: 'CONFIRMADA' | 'RECHAZADA') => {
     try {
       await api.patch(`/clases/inscripciones/${inscripcion.id}`, { estado });
+      avisarCambioPendientes();
       fetchData();
     } catch (err) {
       alert(mensajeError(err));
